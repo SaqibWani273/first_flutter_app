@@ -1,7 +1,10 @@
+import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter_app/tabs/profile_tab/login.dart';
+import 'package:flutter_app/tabs/profile_tab/reset_password.dart';
 import '../firebase_options.dart';
+import '../main.dart';
 import 'user_authentication.dart';
 
 class ApplicationState extends ChangeNotifier {
@@ -10,56 +13,39 @@ class ApplicationState extends ChangeNotifier {
   ApplicationLoginState get loginState => _loginState;
   // returns current loginState
 
-  String? _email;
-  // is assigned after email is verified in verifyEmail()
-  String? get email => _email;
-  ApplicationState() {
+  ApplicationState(BuildContext context) {
     //constructor
-    init();
+
+    init(context);
   }
 //init() starts
-  Future<void> init() async {
+
+  Future<void> init(context) async {
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
     );
-
+    print('init executed');
     FirebaseAuth.instance.userChanges().listen((user) {
-      if (user != null) {
+      if (user != null && user.emailVerified) {
         _loginState = ApplicationLoginState.loggedIn;
-      } else {
+      } else if (user != null && !user.emailVerified) {
+        _loginState = ApplicationLoginState.emailVerification;
+      } else if (user != null) {
         _loginState = ApplicationLoginState.loggedOut;
-      }
-      notifyListeners();
-    });
-  }
-  //init( ) ends
-
-//verifyEmail() starts
-  Future<void> verifyEmail(
-    String email,
-    void Function(FirebaseAuthException e) errorCallback,
-    // refrence of function,that is defined somewhere else and will be called
-    // within this verfiyEmail function using this refrence
-  ) async {
-    try {
-      var methods =
-          await FirebaseAuth.instance.fetchSignInMethodsForEmail(email);
-      if (methods.contains('password')) {
-        _loginState = ApplicationLoginState.password;
       } else {
         _loginState = ApplicationLoginState.register;
       }
-      _email = email;
       notifyListeners();
-    } on FirebaseAuthException catch (e) {
-      errorCallback(e);
-    }
-  }
+    });
 
-  // verifyEmail() ends
+    // navigatorKey.currentState!.popUntil((route) => route.isFirst);
+  }
+  //init( ) ends
 
 // signIn() starts
+
   Future<void> signIn(
+    BuildContext context,
     String email,
     String password,
     void Function(FirebaseAuthException e) errorCallback,
@@ -76,7 +62,7 @@ class ApplicationState extends ChangeNotifier {
   // signIn() ends
 
   void cancelRegistration() {
-    _loginState = ApplicationLoginState.emailAddress;
+    _loginState = ApplicationLoginState.register;
     notifyListeners();
   }
 
@@ -92,13 +78,76 @@ class ApplicationState extends ChangeNotifier {
           .createUserWithEmailAndPassword(email: email, password: password);
       await credential.user!.updateDisplayName(displayName);
     } on FirebaseAuthException catch (e) {
+      //signOut();
       errorCallback(e);
+      return;
       //finally callback function is called here
     }
+    _loginState = ApplicationLoginState.emailVerification;
+    notifyListeners();
   }
   // registerAccount() ends
 
+  //verify email starts
+  Future<void> verifyEmail(
+    User user,
+    void Function(FirebaseAuthException e) errorCallback,
+  ) async {
+    try {
+      await user.sendEmailVerification();
+    } on FirebaseAuthException catch (e) {
+      errorCallback(e);
+      //finally callback function is called here
+    }
+    if (FirebaseAuth.instance.currentUser!.emailVerified) {
+      _loginState = ApplicationLoginState.loggedOut;
+      notifyListeners();
+    }
+  }
+
+  //verify emial ends
+  Future<void> changePassword(
+    String email,
+    void Function(FirebaseAuthException e) errorCallback,
+  ) async {
+    try {
+      await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+
+      AlertDialog(
+        title: Text('Email Sent'),
+        content: Text('Already told you email sent'),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () {
+              navigatorKey.currentState!.pop();
+            },
+            child: Container(
+              color: Colors.green,
+              padding: const EdgeInsets.all(14),
+              child: const Text("okay"),
+            ),
+          ),
+        ],
+      );
+    } on FirebaseAuthException catch (e) {
+      errorCallback(e);
+    }
+    signOut();
+  }
+
+  void sendEmail() {
+    _loginState = ApplicationLoginState.emailVerification;
+    notifyListeners();
+  }
+
   void signOut() {
-    FirebaseAuth.instance.signOut();
+    //FirebaseAuth.instance.signOut();
+    _loginState = ApplicationLoginState.loggedOut;
+    notifyListeners();
+  }
+
+  void resetPassword() {
+    _loginState = ApplicationLoginState.resetPassword;
+    notifyListeners();
   }
 }

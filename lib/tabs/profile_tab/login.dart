@@ -1,12 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app/tabs/profile_tab/reset_password.dart';
 
 import '../../modals/application_state.dart';
 
 class Login extends StatefulWidget {
   final ApplicationState appState;
-  void Function(FirebaseAuthException e) errorCallback;
-  Login(this.appState, this.errorCallback, {Key? key}) : super(key: key);
+  final void Function(FirebaseAuthException e) errorCallback;
+  const Login(this.appState, this.errorCallback, {Key? key}) : super(key: key);
   @override
   State<Login> createState() => _LoginState();
 }
@@ -24,7 +25,7 @@ class _LoginState extends State<Login> {
   @override
   Widget build(BuildContext contxt) {
     // navigatorKey:navigatorKey;
-    final mediaQueryHeight = MediaQuery.of(context).size.height;
+    final mediaQueryHeight = MediaQuery.of(context).size.height * 0.9;
     return Scaffold(
       appBar: AppBar(
         title: const Text('Login Page'),
@@ -71,13 +72,55 @@ class _LoginState extends State<Login> {
                   ),
                 ),
                 const SizedBox(height: 30),
-                ElevatedButton.icon(
-                    onPressed: () {
-                      widget.appState.signIn(email.text.trim(),
-                          password.text.trim(), widget.errorCallback);
-                    },
-                    icon: const Icon(Icons.done_outline_rounded),
-                    label: const Text('Sign In'))
+                Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      TextButton(
+                        style: ButtonStyle(
+                          foregroundColor:
+                              MaterialStateProperty.all<Color>(Colors.blue),
+                        ),
+                        onPressed: () {
+                          widget.appState.resetPassword();
+                        },
+                        child: const Text('forgot password?'),
+                      ),
+                      const SizedBox(
+                        width: 20,
+                      ),
+                      ElevatedButton.icon(
+                        onPressed: () {
+                          widget.appState.signIn(
+                            context,
+                            email.text.trim(),
+                            password.text.trim(),
+                            widget.errorCallback,
+                          );
+                        },
+                        icon: const Icon(Icons.done_outline_rounded),
+                        label: const Text('Sign In'),
+                      ),
+                    ]),
+                const SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text('Not Registered yet?'),
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    TextButton(
+                      style: ButtonStyle(
+                        foregroundColor:
+                            MaterialStateProperty.all<Color>(Colors.blue),
+                      ),
+                      onPressed: () {
+                        widget.appState.cancelRegistration();
+                      },
+                      child: const Text('Create Account'),
+                    ),
+                  ],
+                ),
               ],
             ),
           ),

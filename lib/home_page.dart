@@ -25,9 +25,9 @@ class _HomePageState extends State<HomePage> {
   int currentSelectedTab = Tabs.profile.index;
 
   List<Widget> listTabs = [
-    HomeTab(),
-    VideosTab(),
-    InfoTab(),
+    const HomeTab(),
+    const VideosTab(),
+    const InfoTab(),
     Consumer<ApplicationState>(
 // will now be able to listen to the changes notified by notifyListeners()
 //in ApplicationState

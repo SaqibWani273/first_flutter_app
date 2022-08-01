@@ -4,7 +4,7 @@ import 'package:flutter_app/modals/application_state.dart';
 
 class SignUp extends StatefulWidget {
   final ApplicationState appState;
-  void Function(FirebaseAuthException e) errorCallback;
+  final void Function(FirebaseAuthException e) errorCallback;
   // passed to pass it to registerAccount() where it will be finally called
   SignUp(this.appState, this.errorCallback, {Key? key}) : super(key: key);
   @override
@@ -21,25 +21,6 @@ class _SignUpState extends State<SignUp> {
     email.dispose();
     password.dispose();
     super.dispose();
-  }
-
-  Widget _customTextFormField(
-      String inputFieldLabel, TextEditingController textFieldController) {
-    return TextFormField(
-      // returns a simple textFormField with some preffered styling
-      keyboardType: TextInputType.name,
-      textInputAction: TextInputAction.next,
-      controller: textFieldController,
-      decoration: InputDecoration(
-        labelText: inputFieldLabel,
-        labelStyle: const TextStyle(
-            color: Color.fromRGBO(173, 183, 192, 1),
-            fontWeight: FontWeight.bold),
-        enabledBorder: const UnderlineInputBorder(
-          borderSide: BorderSide(color: Color.fromRGBO(173, 183, 192, 1)),
-        ),
-      ),
-    );
   }
 
   @override
@@ -130,17 +111,35 @@ class _SignUpState extends State<SignUp> {
                 const SizedBox(
                   height: 30,
                 ),
-                ElevatedButton.icon(
-                    onPressed: () {
-                      widget.appState.registerAccount(
-                        email.text.trim(),
-                        userName.text.trim(),
-                        password.text.trim(),
-                        widget.errorCallback,
-                      );
-                    },
-                    icon: const Icon(Icons.lock_outline_rounded),
-                    label: const Text('Sign Up'))
+                Row(
+                  children: [
+                    TextButton(
+                      style: ButtonStyle(
+                        foregroundColor:
+                            MaterialStateProperty.all<Color>(Colors.blue),
+                      ),
+                      onPressed: () {
+                        widget.appState.signOut();
+                      },
+                      child: const Text('Login'),
+                    ),
+                    const SizedBox(
+                      width: 20,
+                    ),
+                    ElevatedButton.icon(
+                      onPressed: () {
+                        widget.appState.registerAccount(
+                          email.text.trim(),
+                          userName.text.trim(),
+                          password.text.trim(),
+                          widget.errorCallback,
+                        );
+                      },
+                      icon: const Icon(Icons.lock_outline_rounded),
+                      label: const Text('Sign Up'),
+                    )
+                  ],
+                ),
               ],
             ),
           ),

@@ -11,7 +11,7 @@ import 'modals/user_authentication.dart';
 void main() {
   runApp(
     ChangeNotifierProvider(
-      create: (context) => ApplicationState(),
+      create: (context) => ApplicationState(context),
       //ApplicationState manages the state
       builder: (context, _) => const MyApp(),
       // MyApp manages the ui
@@ -19,12 +19,16 @@ void main() {
   );
 }
 
+final navigatorKey = GlobalKey<NavigatorState>();
+
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      navigatorKey: navigatorKey,
+      debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
         buttonTheme: Theme.of(context).buttonTheme.copyWith(
