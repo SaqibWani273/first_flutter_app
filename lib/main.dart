@@ -1,12 +1,8 @@
-import 'package:firebase_auth/firebase_auth.dart'; // new
-import 'package:firebase_core/firebase_core.dart'; // new
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:provider/provider.dart'; // new
-import 'firebase_options.dart';
+import 'package:provider/provider.dart';
 import 'home_page.dart';
-import 'modals/application_state.dart';
-import 'modals/user_authentication.dart';
+import 'tabs/profile_tab/modals/application_state.dart';
 
 void main() {
   runApp(

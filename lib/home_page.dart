@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/modals/user_authentication.dart';
 import 'package:provider/provider.dart';
-import 'modals/application_state.dart';
+import 'tabs/profile_tab/modals/application_state.dart';
+import 'tabs/profile_tab/modals/user_authentication.dart';
 import 'tabs/videos_tab/videos_main_screen.dart';
 import 'tabs/home_tab/home_main_screen.dart';
 import 'tabs/info_tab/info_main_screen.dart';
-import 'tabs/profile_tab/profile_main_screen.dart';
 
 enum Tabs {
   home,

@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter_app/tabs/profile_tab/login.dart';
-import 'package:flutter_app/tabs/profile_tab/reset_password.dart';
-import '../firebase_options.dart';
-import '../main.dart';
+import '../../../firebase_options.dart';
 import 'user_authentication.dart';
 
 class ApplicationState extends ChangeNotifier {
@@ -112,23 +109,6 @@ class ApplicationState extends ChangeNotifier {
   ) async {
     try {
       await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
-
-      AlertDialog(
-        title: Text('Email Sent'),
-        content: Text('Already told you email sent'),
-        actions: <Widget>[
-          TextButton(
-            onPressed: () {
-              navigatorKey.currentState!.pop();
-            },
-            child: Container(
-              color: Colors.green,
-              padding: const EdgeInsets.all(14),
-              child: const Text("okay"),
-            ),
-          ),
-        ],
-      );
     } on FirebaseAuthException catch (e) {
       errorCallback(e);
     }

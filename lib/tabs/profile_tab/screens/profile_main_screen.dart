@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/modals/application_state.dart';
+import '../modals/application_state.dart';
 
 class ProfileHome extends StatelessWidget {
   final ApplicationState appState;

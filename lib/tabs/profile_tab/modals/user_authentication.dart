@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/modals/application_state.dart';
-import 'package:flutter_app/tabs/profile_tab/error_page.dart';
-import 'package:flutter_app/tabs/profile_tab/login.dart';
-import 'package:flutter_app/tabs/profile_tab/profile_main_screen.dart';
-import 'package:flutter_app/tabs/profile_tab/reset_password.dart';
-import 'package:flutter_app/tabs/profile_tab/sign_up.dart';
-import '../tabs/profile_tab/verify_email.dart';
+import 'package:flutter_app/tabs/profile_tab/screens/login_screen.dart';
+import 'package:flutter_app/tabs/profile_tab/screens/reset_password.dart';
+import 'package:flutter_app/tabs/profile_tab/screens/signup_screen.dart';
+import '../dialogs/verify_email.dart';
+import '../screens/profile_main_screen.dart';
+import 'application_state.dart';
 
 enum ApplicationLoginState {
   register,
@@ -53,9 +52,11 @@ class UserAuthentication extends StatelessWidget {
 
       case ApplicationLoginState.loggedIn:
         return ProfileHome(appState);
-
       default:
-        return const ErrorPage();
+        return Login(
+          appState,
+          (e) => _showErrorDialog(context, 'Failed to Log in', e),
+        );
     }
   }
 
