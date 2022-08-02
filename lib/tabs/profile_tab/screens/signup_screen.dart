@@ -1,28 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:email_validator/email_validator.dart';
+import 'package:flutter_app/tabs/profile_tab/screens/my_textformfield.dart';
 
 import '../modals/application_state.dart';
 
-class SignUp extends StatefulWidget {
+class newSignUp extends StatefulWidget {
   final ApplicationState appState;
   final void Function(FirebaseAuthException e) errorCallback;
   // passed to pass it to registerAccount() where it will be finally called
-  SignUp(this.appState, this.errorCallback, {Key? key}) : super(key: key);
+  newSignUp(this.appState, this.errorCallback, {Key? key}) : super(key: key);
   @override
-  State<SignUp> createState() => _SignUpState();
+  State<newSignUp> createState() => _newSignUpState();
 }
 
-class _SignUpState extends State<SignUp> {
+class _newSignUpState extends State<newSignUp> {
   final TextEditingController email = TextEditingController();
   final TextEditingController password = TextEditingController();
   final TextEditingController userName = TextEditingController();
   final TextEditingController confirmPassword = TextEditingController();
   final formKey = GlobalKey<FormState>();
+
   @override
   void dispose() {
     email.dispose();
     password.dispose();
+    confirmPassword.dispose();
     super.dispose();
   }
 
@@ -32,117 +34,55 @@ class _SignUpState extends State<SignUp> {
     final mediaQueryHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('SignUp Page'),
+        title: const Text('newSignUp Page'),
       ),
       body: SizedBox(
         height: mediaQueryHeight,
         child: SingleChildScrollView(
           child: Padding(
-            padding: EdgeInsets.all(mediaQueryHeight * 0.1
-                // bottom: mediaQueryHeight * 0.1,
-                // top: mediaQueryHeight * 0.1,
-                // left: mediaQueryHeight * 0.1,
-                // right: mediaQueryHeight * 0.1,
-                ),
+            padding: EdgeInsets.all(mediaQueryHeight * 0.1),
             child: Form(
               key: formKey,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  TextFormField(
-                    keyboardType: TextInputType.name,
-                    textInputAction: TextInputAction.next,
+                  MyTextField().getCustomEditTextArea(
+                    labelValue: 'UserName',
+                    hintValue: 'Enter Your UserName',
                     controller: userName,
-                    decoration: const InputDecoration(
-                      labelText: 'username',
-                      labelStyle: TextStyle(
-                          color: Color.fromRGBO(173, 183, 192, 1),
-                          fontWeight: FontWeight.bold),
-                      enabledBorder: UnderlineInputBorder(
-                        borderSide:
-                            BorderSide(color: Color.fromRGBO(173, 183, 192, 1)),
-                      ),
-                    ),
-                    // autovalidateMode: AutovalidateMode.onUserInteraction,
-                    validator: (value) {
-                      if (value != null && value.length < 10) {
-                        return 'Please enter valid username';
-                      }
-                      return null;
-                    },
+                    validationErrorMsg: 'Enter valid Username',
+                    validation: true,
                   ),
                   const SizedBox(
                     height: 30,
                   ),
-                  TextFormField(
-                    keyboardType: TextInputType.emailAddress,
-                    textInputAction: TextInputAction.next,
+                  MyTextField().getCustomEditTextArea(
+                    labelValue: 'Email',
+                    hintValue: 'Enter Valid Email',
                     controller: email,
-                    decoration: const InputDecoration(
-                      labelText: 'Email',
-                      labelStyle: TextStyle(
-                          color: Color.fromRGBO(173, 183, 192, 1),
-                          fontWeight: FontWeight.bold),
-                      enabledBorder: UnderlineInputBorder(
-                        borderSide:
-                            BorderSide(color: Color.fromRGBO(173, 183, 192, 1)),
-                      ),
-                    ),
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                    validator: ((value) =>
-                        value != null && !EmailValidator.validate(value)
-                            ? 'Enter a valid email'
-                            : null),
+                    validationErrorMsg: 'Email not correctly formatted',
+                    validation: true,
                   ),
                   const SizedBox(
                     height: 30,
                   ),
-                  TextFormField(
-                    keyboardType: TextInputType.name,
-                    textInputAction: TextInputAction.next,
+                  MyTextField().getCustomEditTextArea(
+                    labelValue: 'Password',
+                    hintValue: 'Enter Strong Password',
                     controller: password,
-                    decoration: const InputDecoration(
-                      labelText: 'password',
-                      labelStyle: TextStyle(
-                          color: Color.fromRGBO(173, 183, 192, 1),
-                          fontWeight: FontWeight.bold),
-                      enabledBorder: UnderlineInputBorder(
-                        borderSide:
-                            BorderSide(color: Color.fromRGBO(173, 183, 192, 1)),
-                      ),
-                    ),
-                    //  autovalidateMode: AutovalidateMode.onUserInteraction,
-                    validator: (value) {
-                      if (value != null && value.length < 6) {
-                        return 'Please enter mi. 6 characters';
-                      }
-                      return null;
-                    },
+                    validationErrorMsg: 'Password too short(min. 8 characters)',
+                    validation: true,
                   ),
                   const SizedBox(
                     height: 30,
                   ),
-                  TextFormField(
-                    keyboardType: TextInputType.name,
-                    textInputAction: TextInputAction.next,
+                  MyTextField().getCustomEditTextArea(
+                    labelValue: 'Confirm Password',
+                    hintValue: 'Passwords should match',
                     controller: confirmPassword,
-                    decoration: const InputDecoration(
-                      labelText: 'Confirm Password',
-                      labelStyle: TextStyle(
-                          color: Color.fromRGBO(173, 183, 192, 1),
-                          fontWeight: FontWeight.bold),
-                      enabledBorder: UnderlineInputBorder(
-                        borderSide:
-                            BorderSide(color: Color.fromRGBO(173, 183, 192, 1)),
-                      ),
-                    ),
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                    validator: (value) {
-                      if (value != null && value != password.text) {
-                        return 'Passwords do not match';
-                      }
-                      return null;
-                    },
+                    validationErrorMsg: 'Password not matching error',
+                    validation: true,
+                    //   password: password.text,
                   ),
                   const SizedBox(
                     height: 30,
@@ -164,7 +104,10 @@ class _SignUpState extends State<SignUp> {
                       ),
                       ElevatedButton.icon(
                         onPressed: () {
-                          if (formKey.currentState!.validate()) {
+                          if (formKey.currentState!.validate() &&
+                              password.text == confirmPassword.text)
+                          //to do show snackbar if passwords do not match
+                          {
                             widget.appState.registerAccount(
                               email.text.trim(),
                               userName.text.trim(),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/tabs/profile_tab/screens/login_screen.dart';
+import 'package:flutter_app/tabs/profile_tab/screens/signup_screen.dart';
 import 'package:flutter_app/tabs/profile_tab/screens/reset_password.dart';
 import 'package:flutter_app/tabs/profile_tab/screens/signup_screen.dart';
 import '../dialogs/verify_email.dart';
@@ -25,7 +26,7 @@ class UserAuthentication extends StatelessWidget {
   Widget build(BuildContext context) {
     switch (appState.loginState) {
       case ApplicationLoginState.register:
-        return SignUp(
+        return newSignUp(
           appState,
           (e) => _showErrorDialog(context, 'Failed to create account', e),
           //callback function is first passed to signup()

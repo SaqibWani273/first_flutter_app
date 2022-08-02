@@ -71,6 +71,7 @@ class ApplicationState extends ChangeNotifier {
     void Function(FirebaseAuthException e) errorCallback,
   ) async {
     try {
+      print("entered register");
       var credential = await FirebaseAuth.instance
           .createUserWithEmailAndPassword(email: email, password: password);
       await credential.user!.updateDisplayName(displayName);
@@ -121,9 +122,13 @@ class ApplicationState extends ChangeNotifier {
   }
 
   void signOut() {
-    //FirebaseAuth.instance.signOut();
+    //  FirebaseAuth.instance.signOut();
     _loginState = ApplicationLoginState.loggedOut;
     notifyListeners();
+  }
+
+  void logOut() {
+    FirebaseAuth.instance.signOut();
   }
 
   void resetPassword() {

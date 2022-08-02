@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:email_validator/email_validator.dart';
 import '../modals/application_state.dart';
+import 'my_textformfield.dart';
 
 class Login extends StatefulWidget {
   final ApplicationState appState;
@@ -15,6 +15,7 @@ class _LoginState extends State<Login> {
   final TextEditingController email = TextEditingController();
   final TextEditingController password = TextEditingController();
   final formKey = GlobalKey<FormState>();
+  MyTextField customTextFormField = MyTextField();
   @override
   void dispose() {
     email.dispose();
@@ -40,49 +41,21 @@ class _LoginState extends State<Login> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  TextFormField(
-                    // returns a simple textFormField with some preffered styling
-                    keyboardType: TextInputType.name,
-                    textInputAction: TextInputAction.next,
+                  MyTextField().getCustomEditTextArea(
+                    //MyTextField()=customTextFormField
+                    labelValue: 'Email',
+                    hintValue: 'Enter Registered Email',
                     controller: email,
-                    decoration: const InputDecoration(
-                      labelText: 'Email',
-                      labelStyle: TextStyle(
-                          color: Color.fromRGBO(173, 183, 192, 1),
-                          fontWeight: FontWeight.bold),
-                      enabledBorder: UnderlineInputBorder(
-                        borderSide:
-                            BorderSide(color: Color.fromRGBO(173, 183, 192, 1)),
-                      ),
-                    ),
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                    validator: ((value) =>
-                        value != null && !EmailValidator.validate(value)
-                            ? 'Enter a valid email'
-                            : null),
+                    validationErrorMsg: 'Email not correctly formatted',
+                    validation: true,
                   ),
                   const SizedBox(height: 20),
-                  TextFormField(
-                    // returns a simple textFormField with some preffered styling
-                    keyboardType: TextInputType.name,
-                    textInputAction: TextInputAction.next,
+                  customTextFormField.getCustomEditTextArea(
+                    labelValue: 'Password',
+                    hintValue: 'Enter your Password',
                     controller: password,
-                    decoration: const InputDecoration(
-                      labelText: 'password',
-                      labelStyle: TextStyle(
-                          color: Color.fromRGBO(173, 183, 192, 1),
-                          fontWeight: FontWeight.bold),
-                      enabledBorder: UnderlineInputBorder(
-                        borderSide:
-                            BorderSide(color: Color.fromRGBO(173, 183, 192, 1)),
-                      ),
-                    ),
-                    validator: (value) {
-                      if (value != null && value.length < 6) {
-                        return 'Enter Password';
-                      }
-                      return null;
-                    },
+                    validationErrorMsg: 'Password too weak',
+                    validation: true,
                   ),
                   const SizedBox(height: 30),
                   Row(
