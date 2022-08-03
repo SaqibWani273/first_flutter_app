@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_app/tabs/profile_tab/screens/my_textformfield.dart';
 
-import '../modals/application_state.dart';
+import 'my_textformfield.dart';
+import '../models/application_state.dart';
 
-class newSignUp extends StatefulWidget {
+class SignUp extends StatefulWidget {
   final ApplicationState appState;
   final void Function(FirebaseAuthException e) errorCallback;
-  // passed to pass it to registerAccount() where it will be finally called
-  newSignUp(this.appState, this.errorCallback, {Key? key}) : super(key: key);
+  // received to pass it to registerAccount() where it will be finally called
+  const SignUp(this.appState, this.errorCallback, {Key? key}) : super(key: key);
   @override
-  State<newSignUp> createState() => _newSignUpState();
+  State<SignUp> createState() => _SignUpState();
 }
 
-class _newSignUpState extends State<newSignUp> {
+class _SignUpState extends State<SignUp> {
   final TextEditingController email = TextEditingController();
   final TextEditingController password = TextEditingController();
   final TextEditingController userName = TextEditingController();
@@ -24,17 +24,18 @@ class _newSignUpState extends State<newSignUp> {
   void dispose() {
     email.dispose();
     password.dispose();
+    userName.dispose();
     confirmPassword.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext contxt) {
-    // navigatorKey:navigatorKey;
     final mediaQueryHeight = MediaQuery.of(context).size.height;
+    // device height
     return Scaffold(
       appBar: AppBar(
-        title: const Text('newSignUp Page'),
+        title: const Text('SignUp Page'),
       ),
       body: SizedBox(
         height: mediaQueryHeight,
@@ -106,7 +107,8 @@ class _newSignUpState extends State<newSignUp> {
                         onPressed: () {
                           if (formKey.currentState!.validate() &&
                               password.text == confirmPassword.text)
-                          //to do show snackbar if passwords do not match
+                          //to do here...
+                          //  show snackbar if passwords do not match
                           {
                             widget.appState.registerAccount(
                               email.text.trim(),

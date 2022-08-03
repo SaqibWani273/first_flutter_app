@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-import '../modals/application_state.dart';
+import '../models/application_state.dart';
 
 class VerifyEmail extends StatelessWidget {
   final ApplicationState appState;
@@ -43,7 +43,8 @@ class VerifyEmail extends StatelessWidget {
             ElevatedButton(
               style: ElevatedButton.styleFrom(primary: Colors.red),
               onPressed: () {
-                appState.cancelRegistration();
+                appState.register();
+                //send user to signUp page
                 FirebaseAuth.instance.currentUser!.delete();
               },
               child: const Text(

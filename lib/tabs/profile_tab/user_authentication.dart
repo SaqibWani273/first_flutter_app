@@ -1,19 +1,18 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/tabs/profile_tab/screens/login_screen.dart';
 import 'package:flutter_app/tabs/profile_tab/screens/signup_screen.dart';
-import 'package:flutter_app/tabs/profile_tab/screens/reset_password.dart';
-import 'package:flutter_app/tabs/profile_tab/screens/signup_screen.dart';
-import '../dialogs/verify_email.dart';
-import '../screens/profile_main_screen.dart';
-import 'application_state.dart';
+import 'package:flutter_app/tabs/profile_tab/screens/forgot_password.dart';
+import 'dialogs/verify_email.dart';
+import 'screens/profile_main_screen.dart';
+import 'models/application_state.dart';
 
 enum ApplicationLoginState {
   register,
   emailVerification,
   loggedOut,
   forgotPassword,
-  passwordResetCode,
-  resetPassword,
+  //resettPassword,
   loggedIn,
 }
 
@@ -26,11 +25,11 @@ class UserAuthentication extends StatelessWidget {
   Widget build(BuildContext context) {
     switch (appState.loginState) {
       case ApplicationLoginState.register:
-        return newSignUp(
+        return SignUp(
           appState,
           (e) => _showErrorDialog(context, 'Failed to create account', e),
-          //callback function is first passed to signup()
-          //which then passes it to resgisterAccount()
+          //callback function is first passed to signup() screen
+          //which then passes it to resgisterAccount() in applicationState
         );
       //register
       case ApplicationLoginState.emailVerification:
@@ -45,14 +44,15 @@ class UserAuthentication extends StatelessWidget {
           (e) => _showErrorDialog(context, 'Failed to Log in', e),
         );
 
-      case ApplicationLoginState.resetPassword:
-        return ResetPassword(
+      case ApplicationLoginState.forgotPassword:
+        return ForgotPassword(
           appState,
           (e) => _showErrorDialog(context, 'Failed to send Email', e),
         );
 
       case ApplicationLoginState.loggedIn:
-        return ProfileHome(appState);
+        return ProfileHome(
+            FirebaseAuth.instance.currentUser!.displayName ?? 'Unknown User');
       default:
         return Login(
           appState,
@@ -61,7 +61,8 @@ class UserAuthentication extends StatelessWidget {
     }
   }
 
-  void _showErrorDialog(BuildContext context, String title, Exception e) {
+  void _showErrorDialog(
+      BuildContext context, String title, FirebaseAuthException e) {
     showDialog<void>(
       context: context,
       builder: (context) {
@@ -74,7 +75,8 @@ class UserAuthentication extends StatelessWidget {
             child: ListBody(
               children: <Widget>[
                 Text(
-                  '${(e as dynamic).message}',
+                  // '${(e as dynamic).message}',
+                  e.code,
                   style: const TextStyle(fontSize: 18),
                 ),
               ],

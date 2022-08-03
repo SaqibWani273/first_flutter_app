@@ -3,18 +3,18 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter_app/tabs/profile_tab/screens/my_textformfield.dart';
 
-import '../modals/application_state.dart';
+import '../models/application_state.dart';
 
-class SignUp extends StatefulWidget {
+class OldSignUp extends StatefulWidget {
   final ApplicationState appState;
   final void Function(FirebaseAuthException e) errorCallback;
   // passed to pass it to registerAccount() where it will be finally called
-  SignUp(this.appState, this.errorCallback, {Key? key}) : super(key: key);
+  OldSignUp(this.appState, this.errorCallback, {Key? key}) : super(key: key);
   @override
-  State<SignUp> createState() => _SignUpState();
+  State<OldSignUp> createState() => _OldSignUpState();
 }
 
-class _SignUpState extends State<SignUp> {
+class _OldSignUpState extends State<OldSignUp> {
   final TextEditingController address = TextEditingController();
   final TextEditingController email = TextEditingController();
   final TextEditingController password = TextEditingController();
@@ -35,7 +35,7 @@ class _SignUpState extends State<SignUp> {
     final mediaQueryHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('SignUp Page'),
+        title: const Text('OldSignUp Page'),
       ),
       body: SizedBox(
         height: mediaQueryHeight,

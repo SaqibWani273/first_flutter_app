@@ -1,22 +1,29 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import '../modals/application_state.dart';
+import '../models/application_state.dart';
 
-class ResetPassword extends StatefulWidget {
+class ForgotPassword extends StatefulWidget {
   final ApplicationState appState;
   final void Function(FirebaseAuthException e) errorCallback;
-  const ResetPassword(this.appState, this.errorCallback, {Key? key})
+  const ForgotPassword(this.appState, this.errorCallback, {Key? key})
       : super(key: key);
 
   @override
-  State<ResetPassword> createState() => _ResetPasswordState();
+  State<ForgotPassword> createState() => _ForgotPasswordState();
 }
 
-class _ResetPasswordState extends State<ResetPassword> {
+class _ForgotPasswordState extends State<ForgotPassword> {
+  TextEditingController email = TextEditingController();
+
+  @override
+  void dispose() {
+    email.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    TextEditingController email = TextEditingController();
     final formKey = GlobalKey<FormState>();
     return Scaffold(
       appBar: AppBar(title: const Text("Set New Password")),
@@ -44,9 +51,13 @@ class _ResetPasswordState extends State<ResetPassword> {
                             keyboardType: TextInputType.emailAddress,
                             controller: email,
                             decoration: const InputDecoration(
-                                labelText: 'enter your email '),
-                            autovalidateMode:
-                                AutovalidateMode.onUserInteraction,
+                              labelText: 'enter your email ',
+                              labelStyle: TextStyle(
+                                color: Colors.blueGrey,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            //    autovalidateMode: AutovalidateMode.always,
                             validator: ((value) =>
                                 value != null && !EmailValidator.validate(value)
                                     ? 'Enter a valid email'
@@ -61,7 +72,8 @@ class _ResetPasswordState extends State<ResetPassword> {
                                   backgroundColor: Colors.black12,
                                 ),
                                 onPressed: () {
-                                  widget.appState.cancelRegistration();
+                                  widget.appState.register();
+                                  // sends user to register page
                                 },
                                 icon: const Icon(Icons.cancel),
                                 label: const Text('Cancel'),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'tabs/profile_tab/modals/application_state.dart';
-import 'tabs/profile_tab/modals/user_authentication.dart';
+import 'tabs/profile_tab/models/application_state.dart';
+import 'tabs/profile_tab/user_authentication.dart';
 import 'tabs/videos_tab/videos_main_screen.dart';
 import 'tabs/home_tab/home_main_screen.dart';
 import 'tabs/info_tab/info_main_screen.dart';
@@ -13,15 +13,15 @@ enum Tabs {
   profile,
 }
 
-class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+class MainPage extends StatefulWidget {
+  const MainPage({Key? key}) : super(key: key);
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<MainPage> createState() => _MainPageState();
 }
 
-class _HomePageState extends State<HomePage> {
-  int currentSelectedTab = Tabs.profile.index;
+class _MainPageState extends State<MainPage> {
+  int currentSelectedTab = Tabs.home.index;
 
   List<Widget> listTabs = [
     const HomeTab(),

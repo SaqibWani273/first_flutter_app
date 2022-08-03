@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import '../modals/application_state.dart';
+
+import '../models/application_state.dart';
 import 'my_textformfield.dart';
 
 class Login extends StatefulWidget {
@@ -25,8 +26,8 @@ class _LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext contxt) {
-    // navigatorKey:navigatorKey;
     final mediaQueryHeight = MediaQuery.of(context).size.height * 0.9;
+    // 90% of device height
     return Scaffold(
       appBar: AppBar(
         title: const Text('Login Page'),
@@ -54,7 +55,7 @@ class _LoginState extends State<Login> {
                     labelValue: 'Password',
                     hintValue: 'Enter your Password',
                     controller: password,
-                    validationErrorMsg: 'Password too weak',
+                    validationErrorMsg: 'Password not valid',
                     validation: true,
                   ),
                   const SizedBox(height: 30),
@@ -67,7 +68,7 @@ class _LoginState extends State<Login> {
                                 MaterialStateProperty.all<Color>(Colors.blue),
                           ),
                           onPressed: () {
-                            widget.appState.resetPassword();
+                            widget.appState.forgotPassword();
                           },
                           child: const Text('forgot password?'),
                         ),
@@ -103,7 +104,7 @@ class _LoginState extends State<Login> {
                               MaterialStateProperty.all<Color>(Colors.blue),
                         ),
                         onPressed: () {
-                          widget.appState.cancelRegistration();
+                          widget.appState.register();
                         },
                         child: const Text('Create Account'),
                       ),

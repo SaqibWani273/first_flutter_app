@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class HomeTab extends StatelessWidget {
@@ -9,13 +10,17 @@ class HomeTab extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Home tab'),
       ),
-      body: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: const [
-            Icon(Icons.home),
-            Text('change it to logged in user'),
-          ]),
+      body: Center(
+        child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const Icon(Icons.home),
+              Text(
+                '${FirebaseAuth.instance.currentUser == null ? "Anonymous User" : FirebaseAuth.instance.currentUser!.displayName}',
+              ),
+            ]),
+      ),
     );
   }
 }

@@ -1,10 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import '../modals/application_state.dart';
 
 class ProfileHome extends StatelessWidget {
-  final ApplicationState appState;
-  const ProfileHome(this.appState, {Key? key}) : super(key: key);
+  // final ApplicationState appState;
+  final String user;
+  const ProfileHome(this.user, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -12,7 +12,7 @@ class ProfileHome extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         appBar: AppBar(
-          title: const Text('welcome  Home  '),
+          title: const Text('Profile ... '),
           actions: <Widget>[
             Padding(
               padding: const EdgeInsets.only(top: 18.0),
@@ -26,7 +26,8 @@ class ProfileHome extends StatelessWidget {
               icon: const Icon(Icons.exit_to_app_outlined),
               tooltip: 'LogOut',
               onPressed: () {
-                appState.logOut();
+                //   appState.logOut();
+                FirebaseAuth.instance.signOut();
               },
             ),
           ],

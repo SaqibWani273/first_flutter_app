@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
-import '../../../firebase_options.dart';
-import 'user_authentication.dart';
+import '../user_authentication.dart';
 
 class ApplicationState extends ChangeNotifier {
   ApplicationLoginState _loginState = ApplicationLoginState.loggedOut;
@@ -18,10 +16,9 @@ class ApplicationState extends ChangeNotifier {
 //init() starts
 
   Future<void> init(context) async {
-    await Firebase.initializeApp(
-      options: DefaultFirebaseOptions.currentPlatform,
-    );
-    print('init executed');
+    // await Firebase.initializeApp(
+    //   options: DefaultFirebaseOptions.currentPlatform,
+    // );
     FirebaseAuth.instance.userChanges().listen((user) {
       if (user != null && user.emailVerified) {
         _loginState = ApplicationLoginState.loggedIn;
@@ -34,8 +31,6 @@ class ApplicationState extends ChangeNotifier {
       }
       notifyListeners();
     });
-
-    // navigatorKey.currentState!.popUntil((route) => route.isFirst);
   }
   //init( ) ends
 
@@ -58,7 +53,7 @@ class ApplicationState extends ChangeNotifier {
   }
   // signIn() ends
 
-  void cancelRegistration() {
+  void register() {
     _loginState = ApplicationLoginState.register;
     notifyListeners();
   }
@@ -71,7 +66,6 @@ class ApplicationState extends ChangeNotifier {
     void Function(FirebaseAuthException e) errorCallback,
   ) async {
     try {
-      print("entered register");
       var credential = await FirebaseAuth.instance
           .createUserWithEmailAndPassword(email: email, password: password);
       await credential.user!.updateDisplayName(displayName);
@@ -131,8 +125,8 @@ class ApplicationState extends ChangeNotifier {
     FirebaseAuth.instance.signOut();
   }
 
-  void resetPassword() {
-    _loginState = ApplicationLoginState.resetPassword;
+  void forgotPassword() {
+    _loginState = ApplicationLoginState.forgotPassword;
     notifyListeners();
   }
 }
