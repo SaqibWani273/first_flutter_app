@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'tabs/audios_tab/audio_screen.dart';
+import 'tabs/home_tab/widgets/home_screen.dart';
+import 'tabs/home_tab/models/video_data.dart';
 import 'tabs/profile_tab/models/application_state.dart';
 import 'tabs/profile_tab/user_authentication.dart';
-import 'tabs/videos_tab/videos_main_screen.dart';
-import 'tabs/home_tab/home_main_screen.dart';
 import 'tabs/info_tab/info_main_screen.dart';
 
 enum Tabs {
@@ -24,12 +25,14 @@ class _MainPageState extends State<MainPage> {
   int currentSelectedTab = Tabs.home.index;
 
   List<Widget> listTabs = [
-    const HomeTab(),
-    const VideosTab(),
+    Consumer<VideoData>(
+      builder: (context, videoInfo, _) => HomeTab(videoInfo),
+    ),
+    const AudiosTab(),
     const InfoTab(),
     Consumer<ApplicationState>(
-// will now be able to listen to the changes notified by notifyListeners()
-//in ApplicationState
+      // will now be able to listen to the changes notified by notifyListeners()
+      //in ApplicationState
 
       builder: (context, appState, _) => UserAuthentication(appState),
     ),

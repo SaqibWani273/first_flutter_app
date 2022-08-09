@@ -1,8 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-class HomeTab extends StatelessWidget {
-  const HomeTab({Key? key}) : super(key: key);
+class AudiosTab extends StatelessWidget {
+  const AudiosTab({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

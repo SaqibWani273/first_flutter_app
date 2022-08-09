@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import '../user_authentication.dart';
 
 class ApplicationState extends ChangeNotifier {
-  ApplicationLoginState _loginState = ApplicationLoginState.loggedOut;
+  ApplicationLoginState _loginState = ApplicationLoginState.loading;
   //initially set to loggedout
   ApplicationLoginState get loginState => _loginState;
   // returns current loginState

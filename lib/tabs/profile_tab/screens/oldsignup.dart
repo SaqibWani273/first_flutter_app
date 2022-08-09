@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:email_validator/email_validator.dart';
-import 'package:flutter_app/tabs/profile_tab/screens/my_textformfield.dart';
 
 import '../models/application_state.dart';
 
@@ -9,7 +8,8 @@ class OldSignUp extends StatefulWidget {
   final ApplicationState appState;
   final void Function(FirebaseAuthException e) errorCallback;
   // passed to pass it to registerAccount() where it will be finally called
-  OldSignUp(this.appState, this.errorCallback, {Key? key}) : super(key: key);
+  const OldSignUp(this.appState, this.errorCallback, {Key? key})
+      : super(key: key);
   @override
   State<OldSignUp> createState() => _OldSignUpState();
 }

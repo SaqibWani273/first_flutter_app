@@ -8,6 +8,7 @@ import 'screens/profile_main_screen.dart';
 import 'models/application_state.dart';
 
 enum ApplicationLoginState {
+  loading,
   register,
   emailVerification,
   loggedOut,
@@ -24,6 +25,10 @@ class UserAuthentication extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     switch (appState.loginState) {
+      case ApplicationLoginState.loading:
+        return const Center(
+          child: CircularProgressIndicator(),
+        );
       case ApplicationLoginState.register:
         return SignUp(
           appState,
