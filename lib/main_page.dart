@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'tabs/audios_tab/audio_screen.dart';
+import 'tabs/audios_tab/widgets/audio_screen.dart';
 import 'tabs/home_tab/widgets/home_screen.dart';
 import 'tabs/home_tab/models/video_data.dart';
 import 'tabs/profile_tab/models/application_state.dart';
@@ -80,10 +80,10 @@ class _MainPageState extends State<MainPage> {
               BottomNavigationBarItem(
                 icon: Icon(
                   currentSelectedTab == Tabs.videos.index
-                      ? Icons.video_stable_rounded
-                      : Icons.video_stable_outlined,
+                      ? Icons.audiotrack_rounded
+                      : Icons.audiotrack_outlined,
                 ),
-                label: 'Videos',
+                label: 'Audios',
               ),
               BottomNavigationBarItem(
                 icon: Icon(

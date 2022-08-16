@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'single_video_player.dart';
 
 class VideoInfoWidget extends StatefulWidget {
@@ -12,6 +13,7 @@ class VideoInfoWidget extends StatefulWidget {
 class _VideoInfoWidgetState extends State<VideoInfoWidget> {
   @override
   Widget build(BuildContext context) {
+    final deviceHeight = MediaQuery.of(context).size.height;
     return Container(
       child: Column(children: [
         InkWell(
@@ -27,6 +29,7 @@ class _VideoInfoWidgetState extends State<VideoInfoWidget> {
             );
           },
           child: Container(
+            height: MediaQuery.of(context).size.height * 0.3,
             decoration: BoxDecoration(
               border: Border.all(
                 color: Colors.green,
@@ -43,20 +46,21 @@ class _VideoInfoWidgetState extends State<VideoInfoWidget> {
                 if (frame == null) {
                   return Container(
                     margin: const EdgeInsets.all(50),
-                    height: 200,
-                    width: 300,
+                    height: MediaQuery.of(context).size.height * 0.15,
+                    width: MediaQuery.of(context).size.width * 0.3,
                     color: Colors.grey,
                   );
                 }
                 return child;
               },
+              // widget to show while image loads
               loadingBuilder: (context, child, loadingProgress) {
                 if (loadingProgress == null) {
                   return child;
                 }
                 return SizedBox(
-                  height: 300,
-                  width: 300,
+                  height: MediaQuery.of(context).size.height * 0.15,
+                  width: MediaQuery.of(context).size.width * 0.3,
                   child: Center(
                       child: CircularProgressIndicator(
                     value: loadingProgress.expectedTotalBytes != null
@@ -72,7 +76,8 @@ class _VideoInfoWidgetState extends State<VideoInfoWidget> {
         const SizedBox(
           height: 10,
         ),
-        Padding(
+        Container(
+          height: deviceHeight * 0.1,
           padding:
               EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.01),
           child: Column(

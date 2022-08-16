@@ -26,10 +26,10 @@ class _HomeTabState extends State<HomeTab> {
         future: _initVideoInfoListFuture,
         builder: (context, snapshot) {
           switch (snapshot.connectionState) {
-            case ConnectionState.waiting:
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
+            // case ConnectionState.waiting:
+            //   return const Center(
+            //     child: CircularProgressIndicator(),
+            //   );
 
             case ConnectionState.done:
               {
@@ -41,7 +41,7 @@ class _HomeTabState extends State<HomeTab> {
                     gridDelegate:
                         const SliverGridDelegateWithMaxCrossAxisExtent(
                       maxCrossAxisExtent: 500,
-                      childAspectRatio: 3 / 2.3,
+                      childAspectRatio: 3 / 2.6,
                       crossAxisSpacing: 30,
                     ),
                     itemBuilder: ((context, index) => VideoInfoWidget(
@@ -51,8 +51,9 @@ class _HomeTabState extends State<HomeTab> {
                 }
                 return Center(
                   child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: const [
-                      Text('Loading ...'),
+                      Text('SnapShot has no data...'),
                       CircularProgressIndicator(),
                     ],
                   ),
@@ -62,6 +63,7 @@ class _HomeTabState extends State<HomeTab> {
             default:
               return Center(
                 child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: const [
                     Text('Loading ...'),
                     CircularProgressIndicator(),

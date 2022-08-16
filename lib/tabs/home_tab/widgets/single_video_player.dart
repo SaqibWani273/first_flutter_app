@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 
 class SingleVideoPlayer extends StatefulWidget {
-  final Map<String, String> videoIfnoList;
+  final Map<String, String> videoInfoList;
 
-  const SingleVideoPlayer(this.videoIfnoList, {Key? key}) : super(key: key);
+  const SingleVideoPlayer(this.videoInfoList, {Key? key}) : super(key: key);
 
   @override
   State<SingleVideoPlayer> createState() => _SingleVideoPlayerState();
@@ -15,24 +15,25 @@ class _SingleVideoPlayerState extends State<SingleVideoPlayer> {
   late final String videoDescription;
   late final String videoDate;
   late final String videoSpeaker;
-  bool videoHovered = false;
+  late final String videoUrl;
   late VideoPlayerController _video;
   late Future<void> _initVideoFuture;
-  String temp = 'first';
-//to store the Future returned from VideoPlayerController.initialize
 
   @override
   void initState() {
-    final String videoUrl = widget.videoIfnoList['url'].toString();
-
-    videoDescription = widget.videoIfnoList['description'].toString();
-    videoDate = widget.videoIfnoList['date'].toString();
-    videoSpeaker = widget.videoIfnoList['speaker'].toString();
+    videoUrl = widget.videoInfoList['url'].toString();
+    videoDescription = widget.videoInfoList['description'].toString();
+    videoDate = widget.videoInfoList['date'].toString();
+    videoSpeaker = widget.videoInfoList['speaker'].toString();
     _video = VideoPlayerController.network(videoUrl);
     _initVideoFuture = _video.initialize();
+
     // initializes the video
     _video.setLooping(true);
     // Use the controller to loop the video.
+
+    _video.play();
+    //automatically play video for the first time
     super.initState();
   }
 
@@ -52,11 +53,6 @@ class _SingleVideoPlayerState extends State<SingleVideoPlayer> {
         future: _initVideoFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
-            if (temp == 'first') {
-              _video.play();
-              temp = 'second';
-            }
-
             // If the VideoPlayerController has finished initialization, use
             // the data it provides to limit the aspect ratio of the video.
             return Center(
@@ -64,33 +60,18 @@ class _SingleVideoPlayerState extends State<SingleVideoPlayer> {
                 children: [
                   AspectRatio(
                     aspectRatio: _video.value.aspectRatio,
-                    child: MouseRegion(
-                      onExit: ((event) {
-                        // print('hover removed');
+                    child: InkWell(
+                      onTap: () {
+                        // onTap was not work without using IgnorePointer
                         setState(() {
-                          videoHovered = false;
-                        });
-                      }),
-                      onHover: (event) {
-                        //  print('hovered');
-                        setState(() {
-                          videoHovered = true;
+                          // If the video is playing, pause it.
+                          _video.value.isPlaying
+                              ? _video.pause()
+                              : _video.play();
                         });
                       },
-                      child: InkWell(
-                        onDoubleTap: () {
-                          print(' tapped');
-                          setState(() {
-                            // If the video is playing, pause it.
-                            if (_video.value.isPlaying) {
-                              print('playing');
-                              _video.pause();
-                            } else {
-                              // If the video is paused, play it.
-                              _video.play();
-                            }
-                          });
-                        },
+                      child: IgnorePointer(
+                        // to make onTap() work
                         child: Stack(alignment: Alignment.center, children: [
                           Stack(
                             alignment: Alignment.bottomCenter,
@@ -107,38 +88,16 @@ class _SingleVideoPlayerState extends State<SingleVideoPlayer> {
                               )
                             ],
                           ),
-                          // if (!_video.value.isPlaying)
-                          //   ElevatedButton.icon(
-                          //     onPressed: () {
-                          //       setState(() {
-                          //         _video.play();
-                          //       });
-                          //     },
-                          //     icon: Icon(Icons.play_arrow_rounded),
-                          //     label: const Text('play'),
-                          //   )
-                          if (videoHovered)
+                          if (!_video.value.isPlaying)
                             ElevatedButton.icon(
                               onPressed: () {
-                                setState(() {
-                                  // If the video is playing, pause it.
-                                  if (_video.value.isPlaying) {
-                                    _video.pause();
-                                  } else {
-                                    // If the video is paused, play it.
-                                    _video.play();
-                                  }
-                                });
+                                // setState(() {
+                                //   _video.play();
+                                // });
                               },
-                              icon: Icon(
-                                _video.value.isPlaying
-                                    ? Icons.pause
-                                    : Icons.play_arrow,
-                              ),
-                              label: _video.value.isPlaying
-                                  ? const Text('pause')
-                                  : const Text('play'),
-                            ),
+                              icon: const Icon(Icons.play_arrow_rounded),
+                              label: const Text('play'),
+                            )
                         ]),
                       ),
                     ),
@@ -146,13 +105,12 @@ class _SingleVideoPlayerState extends State<SingleVideoPlayer> {
                   const SizedBox(
                     height: 20,
                   ),
-                  Container(
-                      child: Column(
+                  Column(
                     children: [
                       Text(videoSpeaker),
                       Text('$videoDate || $videoDescription'),
                     ],
-                  )),
+                  ),
                 ],
               ),
             );
