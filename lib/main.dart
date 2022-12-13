@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/firebase_options.dart';
+import 'package:flutter_app/tabs/upload_video_tab/models/upload_data.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'main_page.dart';
@@ -20,6 +21,9 @@ Future<void> main() async {
       ChangeNotifierProvider(
         create: (context) => ApplicationState(context),
       ),
+      ChangeNotifierProvider(
+        create: (context) => UploadData(context),
+      )
       // MyApp manages the ui
     ], child: const MyApp()),
   );

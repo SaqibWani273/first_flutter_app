@@ -85,9 +85,16 @@ class _VideoInfoWidgetState extends State<VideoInfoWidget> {
               Text(
                 widget.singleVideoInfo['speaker'].toString(),
               ),
-              Text(
-                '${widget.singleVideoInfo['date']} || ${widget.singleVideoInfo['description']}',
-                textAlign: TextAlign.center,
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 8.0,
+                ),
+                child: Text(
+                  '${widget.singleVideoInfo['date']} || ${widget.singleVideoInfo['description']}',
+                  textAlign: TextAlign.center,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
             ],
           ),

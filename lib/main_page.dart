@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/tabs/upload_video_tab/models/upload_data.dart';
 import 'package:provider/provider.dart';
 import 'tabs/audios_tab/widgets/audio_screen.dart';
 import 'tabs/home_tab/widgets/home_screen.dart';
 import 'tabs/home_tab/models/video_data.dart';
 import 'tabs/profile_tab/models/application_state.dart';
 import 'tabs/profile_tab/user_authentication.dart';
-import 'tabs/info_tab/info_main_screen.dart';
+import 'tabs/upload_video_tab/upload_main_screen.dart';
 
 enum Tabs {
   home,
   videos,
-  about,
+  upload,
   profile,
 }
 
@@ -22,20 +23,21 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-  int currentSelectedTab = Tabs.home.index;
+  int currentSelectedTab = Tabs.upload.index;
 
   List<Widget> listTabs = [
     Consumer<VideoData>(
-      builder: (context, videoInfo, _) => HomeTab(videoInfo),
-    ),
+      builder: (context, videoInfo /*instance of VideoData*/, _) =>
+          HomeTab(videoInfo),
+    ), //videoTab
     const AudiosTab(),
-    const InfoTab(),
-    Consumer<ApplicationState>(
-      // will now be able to listen to the changes notified by notifyListeners()
-      //in ApplicationState
-
-      builder: (context, appState, _) => UserAuthentication(appState),
+    // const UploadTab(),
+    Consumer<UploadData>(
+      builder: (context, uploadData, _) => UploadTab(uploadData),
     ),
+    Consumer<ApplicationState>(
+      builder: (context, appState, _) => UserAuthentication(appState),
+    ), //profile Tab
   ];
 
   @override
@@ -64,7 +66,8 @@ class _MainPageState extends State<MainPage> {
               setState(
                 () {
                   currentSelectedTab = index;
-                  // update currentSelectedTab when user presses different tab
+                  // update currentSelectedTab when
+                  //user presses different tab
                 },
               );
             },
@@ -87,7 +90,7 @@ class _MainPageState extends State<MainPage> {
               ),
               BottomNavigationBarItem(
                 icon: Icon(
-                  currentSelectedTab == Tabs.about.index
+                  currentSelectedTab == Tabs.upload.index
                       ? Icons.info
                       : Icons.info_outline_rounded,
                 ),
