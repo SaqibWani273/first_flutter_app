@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../models/video_data.dart';
 import 'video_info_widget.dart';
+import '../firebaseCloud.dart';
 
 class HomeTab extends StatefulWidget {
   final VideoData videosInfoProvider;
@@ -12,6 +13,8 @@ class HomeTab extends StatefulWidget {
 }
 
 class _HomeTabState extends State<HomeTab> {
+  final ref = fetchVideosFromFCloud();
+
   late Future<void> _initVideoInfoListFuture;
   @override
   void initState() {
@@ -21,15 +24,16 @@ class _HomeTabState extends State<HomeTab> {
 
   @override
   Widget build(BuildContext context) {
+    ref.display();
     return Scaffold(
       body: FutureBuilder(
         future: _initVideoInfoListFuture,
         builder: (context, snapshot) {
           switch (snapshot.connectionState) {
-            // case ConnectionState.waiting:
-            //   return const Center(
-            //     child: CircularProgressIndicator(),
-            //   );
+            case ConnectionState.waiting:
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
 
             case ConnectionState.done:
               {
@@ -41,7 +45,7 @@ class _HomeTabState extends State<HomeTab> {
                     gridDelegate:
                         const SliverGridDelegateWithMaxCrossAxisExtent(
                       maxCrossAxisExtent: 500,
-                      childAspectRatio: 3 / 2.6,
+                      childAspectRatio: 3 / 2.1,
                       crossAxisSpacing: 30,
                     ),
                     itemBuilder: ((context, index) => VideoInfoWidget(
@@ -53,8 +57,7 @@ class _HomeTabState extends State<HomeTab> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: const [
-                      Text('SnapShot has no data...'),
-                      CircularProgressIndicator(),
+                      Text('Error Occurred ! while fetching data...'),
                     ],
                   ),
                 );
