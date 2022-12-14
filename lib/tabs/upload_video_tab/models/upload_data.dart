@@ -11,6 +11,8 @@ class UploadData extends ChangeNotifier {
   var isImageSelected = false;
   var isUploading = false;
   late PlatformFile selectedVideo;
+  late String selectedImagePath;
+  var progress = 0.0;
   // late String fileName;
   Future selectVideo() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
@@ -34,6 +36,7 @@ class UploadData extends ChangeNotifier {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       type: FileType.image,
     );
+    selectedImagePath = result!.files.first.path!;
     isImageSelected = true;
     notifyListeners();
   }
@@ -41,14 +44,49 @@ class UploadData extends ChangeNotifier {
   cancelUploading() {
     //...code to cancel video uplaod
   }
-  uploadVideo() async {
+  uploadVideo({
+    required String title,
+    required String date,
+    required String speaker,
+    required String description,
+  }) async {
     // firebase path to upload videos at
     String filePath = 'uploads/${selectedVideo.name}';
     final videoFile = File(selectedVideo.path!);
 
     try {
       final ref = FirebaseStorage.instance.ref(filePath);
-      await ref.putFile(videoFile);
+      await ref.putFile(videoFile).snapshotEvents.listen((taskSnapshot) {
+        switch (taskSnapshot.state) {
+          case TaskState.running:
+            progress =
+                100 * taskSnapshot.bytesTransferred / taskSnapshot.totalBytes;
+            notifyListeners();
+            break;
+          case TaskState.paused:
+            // ...
+            break;
+          case TaskState.success:
+            final metaData = SettableMetadata(customMetadata: {
+              "title": title,
+              "speaker": speaker,
+              "description": description,
+              "date": date,
+            });
+            print(date);
+            ref.updateMetadata(metaData);
+            isVideoSelected = !isVideoSelected;
+            isUploading = !isUploading;
+            notifyListeners();
+            break;
+          case TaskState.canceled:
+            // ...
+            break;
+          case TaskState.error:
+            // ...
+            break;
+        }
+      });
     } catch (e) {
       // ...
       print(e.toString());
