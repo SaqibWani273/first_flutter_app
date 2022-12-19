@@ -14,7 +14,9 @@ class UploadData extends ChangeNotifier {
   var isUploading = false;
   var isPaused = false;
   late PlatformFile selectedVideo;
+  late PlatformFile selectedImage;
   late String selectedImagePath;
+
   late UploadTask uploadTask;
   int progress = 0;
   var isUploadSuccessfull = false;
@@ -43,7 +45,8 @@ class UploadData extends ChangeNotifier {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       type: FileType.image,
     );
-    selectedImagePath = result!.files.first.path!;
+    selectedImage = result!.files.first;
+    selectedImagePath = result.files.first.path!;
     isImageSelected = true;
     notifyListeners();
   }
@@ -87,12 +90,17 @@ class UploadData extends ChangeNotifier {
     required BuildContext context,
   }) async {
     // firebase path to upload videos at
-    String filePath = 'uploads/${selectedVideo.name}';
+    String videoFilePath = 'uploads/$speaker/${selectedVideo.name}';
+    String imageFilePath = 'uploads/$speaker/${selectedImage.name}';
     final videoFile = File(selectedVideo.path!);
+    final imageFile = File(selectedImagePath);
 
     try {
-      final ref = FirebaseStorage.instance.ref(filePath);
+      final ref = FirebaseStorage.instance.ref(videoFilePath);
+      final imageRef = FirebaseStorage.instance.ref(imageFilePath);
+      imageRef.putFile(imageFile);
       uploadTask = ref.putFile(videoFile);
+
       // to listen to ongoing progress while uploading
       uploadTask.snapshotEvents.listen(
         (taskSnapshot) {

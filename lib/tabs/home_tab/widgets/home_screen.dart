@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/tabs/home_tab/models/download_data.dart';
 import 'package:provider/provider.dart';
 import '../models/video_data.dart';
 import 'video_info_widget.dart';
@@ -14,6 +15,7 @@ class HomeTab extends StatefulWidget {
 
 class _HomeTabState extends State<HomeTab> {
   final ref = fetchVideosFromFCloud();
+  DownloadData _data = DownloadData();
 
   late Future<void> _initVideoInfoListFuture;
   @override
@@ -25,6 +27,8 @@ class _HomeTabState extends State<HomeTab> {
   @override
   Widget build(BuildContext context) {
     ref.display();
+    _data.getVideos();
+
     return Scaffold(
       body: FutureBuilder(
         future: _initVideoInfoListFuture,
