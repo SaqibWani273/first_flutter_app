@@ -117,18 +117,18 @@ class UploadTab extends StatelessWidget {
                                                 upload.cancelUploading(context);
                                               },
                                             ),
-                                            upload.isPaused
-                                                ? ElevatedButton(
-                                                    child:
-                                                        Text('resume upload'),
-                                                    onPressed:
-                                                        upload.resumeUploading,
-                                                  )
-                                                : ElevatedButton(
-                                                    child: Text('pause upload'),
-                                                    onPressed:
-                                                        upload.pauseUploading,
-                                                  ),
+                                            // upload.isPaused
+                                            //     ? ElevatedButton(
+                                            //         child:
+                                            //             Text('resume upload'),
+                                            //         onPressed:
+                                            //             upload.resumeUploading,
+                                            //       )
+                                            //     : ElevatedButton(
+                                            //         child: Text('pause upload'),
+                                            //         onPressed:
+                                            //             upload.pauseUploading,
+                                            //       ),
                                             ElevatedButton(
                                               child: Text(
                                                   'Uploading Video ${upload.progress} %'),

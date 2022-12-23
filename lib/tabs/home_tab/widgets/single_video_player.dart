@@ -21,10 +21,10 @@ class _SingleVideoPlayerState extends State<SingleVideoPlayer> {
 
   @override
   void initState() {
-    videoUrl = widget.videoInfoList['url'].toString();
-    videoDescription = widget.videoInfoList['description'].toString();
-    videoDate = widget.videoInfoList['date'].toString();
-    videoSpeaker = widget.videoInfoList['speaker'].toString();
+    videoUrl = widget.videoInfoList['videoUrl']!;
+    videoDescription = widget.videoInfoList['description']!;
+    videoDate = widget.videoInfoList['date']!;
+    videoSpeaker = widget.videoInfoList['speaker']!;
     _video = VideoPlayerController.network(videoUrl);
     _initVideoFuture = _video.initialize();
 

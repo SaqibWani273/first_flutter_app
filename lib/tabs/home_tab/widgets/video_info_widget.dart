@@ -39,7 +39,7 @@ class _VideoInfoWidgetState extends State<VideoInfoWidget> {
             width: double.infinity,
 
             child: Image.network(
-              widget.singleVideoInfo['thumbnail'].toString(),
+              widget.singleVideoInfo['imageUrl']!,
               fit: BoxFit.cover,
               frameBuilder: (context, child, frame, _) {
                 //a placeholder before image starts to load
@@ -83,7 +83,7 @@ class _VideoInfoWidgetState extends State<VideoInfoWidget> {
           child: Column(
             children: [
               Text(
-                widget.singleVideoInfo['speaker'].toString(),
+                widget.singleVideoInfo['speaker']!,
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(

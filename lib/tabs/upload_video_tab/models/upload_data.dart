@@ -16,6 +16,8 @@ class UploadData extends ChangeNotifier {
   late PlatformFile selectedVideo;
   late PlatformFile selectedImage;
   late String selectedImagePath;
+  late Reference videoRef;
+  late Reference imageRef;
 
   late UploadTask uploadTask;
   int progress = 0;
@@ -54,8 +56,10 @@ class UploadData extends ChangeNotifier {
 //function to cancel ongoing upload
   cancelUploading(BuildContext contxt) {
     print('cancel uploading called');
-
+    //when video is cancelled ,delete the uploaded image
+    imageRef.delete();
     uploadTask.cancel();
+
     isUploadCancelled = true;
     ScaffoldMessenger.of(contxt).showSnackBar(
       SnackBar(
@@ -89,17 +93,25 @@ class UploadData extends ChangeNotifier {
     required String description,
     required BuildContext context,
   }) async {
+    final length = await FirebaseStorage.instance
+        .ref()
+        .child('uploads')
+        .listAll()
+        .then((value) => value.prefixes.length);
+
     // firebase path to upload videos at
-    String videoFilePath = 'uploads/$speaker/${selectedVideo.name}';
-    String imageFilePath = 'uploads/$speaker/${selectedImage.name}';
+    String videoFilePath =
+        'uploads/$speaker _$length/video/${selectedVideo.name}';
+    String imageFilePath =
+        'uploads/$speaker _$length/image/${selectedImage.name}';
     final videoFile = File(selectedVideo.path!);
     final imageFile = File(selectedImagePath);
 
     try {
-      final ref = FirebaseStorage.instance.ref(videoFilePath);
-      final imageRef = FirebaseStorage.instance.ref(imageFilePath);
+      videoRef = FirebaseStorage.instance.ref(videoFilePath);
+      imageRef = FirebaseStorage.instance.ref(imageFilePath);
       imageRef.putFile(imageFile);
-      uploadTask = ref.putFile(videoFile);
+      uploadTask = videoRef.putFile(videoFile);
 
       // to listen to ongoing progress while uploading
       uploadTask.snapshotEvents.listen(
@@ -128,8 +140,8 @@ class UploadData extends ChangeNotifier {
                 "date": date,
               });
               print(date);
-              ref.updateMetadata(metaData);
-              isUploadSuccessfull = true;
+              videoRef.updateMetadata(metaData);
+
               print('success executed');
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
@@ -138,6 +150,7 @@ class UploadData extends ChangeNotifier {
                   ),
                 ),
               );
+              isUploadSuccessfull = true;
               notifyListeners();
               break;
 // case 4:

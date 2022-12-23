@@ -23,13 +23,14 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-  int currentSelectedTab = Tabs.upload.index;
+  int currentSelectedTab = Tabs.home.index;
 
   List<Widget> listTabs = [
-    Consumer<VideoData>(
-      builder: (context, videoInfo /*instance of VideoData*/, _) =>
-          HomeTab(videoInfo),
-    ), //videoTab
+    // Consumer<VideoData>(
+    //   builder: (context, videoInfo /*instance of VideoData*/, _) =>
+    //       HomeTab(videoInfo),
+    // ), //videoTab
+    HomeTab(),
     const AudiosTab(),
     // const UploadTab(),
     Consumer<UploadData>(

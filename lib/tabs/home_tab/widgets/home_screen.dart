@@ -3,35 +3,36 @@ import 'package:flutter_app/tabs/home_tab/models/download_data.dart';
 import 'package:provider/provider.dart';
 import '../models/video_data.dart';
 import 'video_info_widget.dart';
-import '../firebaseCloud.dart';
 
 class HomeTab extends StatefulWidget {
-  final VideoData videosInfoProvider;
-  const HomeTab(this.videosInfoProvider, {Key? key}) : super(key: key);
+  // final VideoData videosInfoProvider;
+  const HomeTab({Key? key}) : super(key: key);
 
   @override
   State<HomeTab> createState() => _HomeTabState();
 }
 
 class _HomeTabState extends State<HomeTab> {
-  final ref = fetchVideosFromFCloud();
-  DownloadData _data = DownloadData();
+  DownloadData _downloadRef = DownloadData();
 
-  late Future<void> _initVideoInfoListFuture;
+//  late Future<void> _initVideoInfoListFuture;
+  late Future<List<Map<String, String>>> _videosDataFuture;
   @override
   void initState() {
-    _initVideoInfoListFuture = widget.videosInfoProvider.fetchVideosData();
+    // _initVideoInfoListFuture = widget.videosInfoProvider.fetchVideosData();
+    _videosDataFuture = _downloadRef.getVideos();
+    print(_videosDataFuture.toString());
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    ref.display();
-    _data.getVideos();
-
     return Scaffold(
+      appBar: AppBar(
+        title: Text("home"),
+      ),
       body: FutureBuilder(
-        future: _initVideoInfoListFuture,
+        future: _videosDataFuture, //_initVideoInfoListFuture,
         builder: (context, snapshot) {
           switch (snapshot.connectionState) {
             case ConnectionState.waiting:
@@ -42,10 +43,11 @@ class _HomeTabState extends State<HomeTab> {
             case ConnectionState.done:
               {
                 if (snapshot.hasData) {
-                  List<Map<String, String>> videoInfoList =
-                      Provider.of<VideoData>(context).videosInfo;
+                  // List<Map<String, String>> videoInfoList =
+                  //     Provider.of<VideoData>(context).videosInfo;
+                  List<Map<String, String>> VideoDataMap = _downloadRef.dataMap;
                   return GridView.builder(
-                    itemCount: videoInfoList.length,
+                    itemCount: VideoDataMap.length,
                     gridDelegate:
                         const SliverGridDelegateWithMaxCrossAxisExtent(
                       maxCrossAxisExtent: 500,
@@ -53,7 +55,8 @@ class _HomeTabState extends State<HomeTab> {
                       crossAxisSpacing: 30,
                     ),
                     itemBuilder: ((context, index) => VideoInfoWidget(
-                          videoInfoList[index],
+                          //  videoInfoList[index],
+                          VideoDataMap[index],
                         )),
                   );
                 }
